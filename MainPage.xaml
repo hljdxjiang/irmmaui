@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:oxy="clr-namespace:OxyPlot.Maui.Skia;assembly=OxyPlot.Maui.Skia"
+             x:Class="IRMMAUI.MainPage">
+
+    <StackLayout>
+        <VerticalStackLayout
+            Spacing="0"
+            VerticalOptions="Start">
+            <HorizontalStackLayout VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+                <Label FontSize="20" Padding="5" Text="文件路径:"/>
+                <Label x:Name="FileUrlPath" FontSize="20" Padding="5" Text=""/>
+            </HorizontalStackLayout>
+           <HorizontalStackLayout VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+                <Button
+                    x:Name="SelectBtn"
+                    Text="选择文件"
+                    Margin="5.0"
+                    SemanticProperties.Hint="Select File"
+                    Clicked="OpenFilePickerAsync"
+                    HorizontalOptions="Start" />
+               <Button
+                   x:Name="StartBtn"
+                   Text="开始处理"
+                   Margin="5.0"
+                   Clicked="StartProcessAsync"
+                   SemanticProperties.Hint="Start Process"
+                   HorizontalOptions="Start"/>
+            </HorizontalStackLayout>
+            <ScrollView x:Name="tablesContent" HorizontalOptions="Fill" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Always" IsClippedToBounds="true">
+                <StackLayout x:Name="dataLayout" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+
+                </StackLayout>
+            </ScrollView>
+
+        </VerticalStackLayout>
+    </StackLayout>
+
+</ContentPage>
+
