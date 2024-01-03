@@ -4,6 +4,9 @@ using IRMMAUI.Service;
 using SkiaSharp.Views.Maui.Controls;
 using System.Threading;
 using CommunityToolkit.Maui.Storage;
+using Maui.DataGrid;
+using IRMMAUI.ViewModels;
+using IRMMAUI.Entity;
 
 namespace IRMMAUI;
 
@@ -23,6 +26,7 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         this._oxyPlotService = IRMMAUI.MauiProgram.Services.GetRequiredService<IOxyPlotService>();
         this._fileProcess = IRMMAUI.MauiProgram.Services.GetRequiredService<IFileProcess>();
+        BindingContext = new DataViewModel();
     }
 
     private async void OpenFilePickerAsync(object sender, EventArgs e)
@@ -46,7 +50,6 @@ public partial class MainPage : ContentPage
             await DisplayAlert("警告", "请先选择要处理的文件", "确定");
             return;
         }
-        dataLayout.Children.Clear();
 
         try
         {
@@ -57,7 +60,16 @@ public partial class MainPage : ContentPage
             System.Console.WriteLine(ex);
         }
 
-        RenderNext(0);
+        try
+        {
+            RenderNext(0);
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine(ex);
+        }
+
+
 
         hasProcess = true;
         await DisplayAlert("提示", "处理完成", "确定");
@@ -96,23 +108,14 @@ public partial class MainPage : ContentPage
             return;
         }
         PlotModel plotModel = null;
-        TableView tableView = null;
+        //TableView tableView = null;
+        //DataGrid dataGrid = null;
+        List<TableItem> list;
         var item = _dictionary.ElementAt(idx);
-        _oxyPlotService.GetView(item.Key, item.Value, out plotModel, out tableView);
-        var plotModelView = new PlotView
-        {
-            WidthRequest = 800,
-            HeightRequest = 800,
-            Model = plotModel,
-        };
+        _oxyPlotService.GetListView(item.Key, item.Value, out plotModel, out list);
+        plotView.Model = plotModel;
 
-        Button downButtoon = new Button
-        {
-            Text = "下载" + item.Key,
-            Margin = new Thickness(5)
-        };
-
-        downButtoon.Clicked += (sender, args) => download_click(item.Key, plotModel);
+        //操作按钮组展示
         var nextButtons = new HorizontalStackLayout
         {
             HorizontalOptions = LayoutOptions.Center,
@@ -132,6 +135,15 @@ public partial class MainPage : ContentPage
 
         }
 
+        //下载按钮
+        Button downButtoon = new Button
+        {
+            Text = "下载" + item.Key,
+            Margin = new Thickness(5)
+        };
+        //下载按钮绑定方法
+        downButtoon.Clicked += (sender, args) => download_click(item.Key, plotModel);
+
         nextButtons.Add(downButtoon);
 
         if (idx < _dictionary.Count - 1)
@@ -147,21 +159,29 @@ public partial class MainPage : ContentPage
 
         }
 
-        var content = new StackLayout
+        //更新按钮展示前清空按钮
+        btnAndLabel.Children.Clear();
+
+        btnAndLabel.Children.Add(new Label
         {
-            Children = { plotModelView,new Label {
-                    Text=(idx+1).ToString()+"/"+_dictionary.Count,
-                    VerticalOptions=LayoutOptions.Fill,
-                    FontSize=20,
-                    HorizontalTextAlignment=TextAlignment.Center,
-                    TextColor=Colors.Blue
-                },nextButtons
-}
-        };
-        dataLayout.Clear();
-        dataLayout.Children.Add(content);
-
-
+            Text = (idx + 1).ToString() + "/" + _dictionary.Count,
+            VerticalOptions = LayoutOptions.Fill,
+            FontSize = 20,
+            HorizontalTextAlignment = TextAlignment.Center,
+            TextColor = Colors.Blue
+        });
+        btnAndLabel.Children.Add(nextButtons);
+        DataViewModel dataView = new DataViewModel();
+        dataView.Items = list;
+        uiGrid.BindingContext = dataView;
+        uiGrid.BackgroundColor = Colors.White;
+        uiGrid.Background = Colors.Gray;
+        uiGrid.HeaderBackground = Colors.Gray;
+        uiGrid.HeaderBordersVisible = true;
+        uiGrid.HeaderHeight = 80;
+        uiGrid.RowHeight = 60;
+        uiGrid.BorderColor = Colors.Gray;
+        uiGrid.ItemsSource = list;
     }
 }
 

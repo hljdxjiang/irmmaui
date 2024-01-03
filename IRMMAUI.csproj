@@ -56,15 +56,18 @@
 		<PackageReference Include="OxyPlot.Maui.Skia" Version="1.0.0" />
 		<PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
+		<PackageReference Include="akgul.Maui.DataGrid" Version="2.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="Entity\" />
 	  <None Remove="Service\" />
+	  <None Remove="ViewModels\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Common\" />
 	  <Folder Include="Entity\" />
 	  <Folder Include="Service\" />
+	  <Folder Include="ViewModels\" />
 	</ItemGroup>
 </Project>
