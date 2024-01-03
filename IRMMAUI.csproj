@@ -57,6 +57,7 @@
 		<PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
 		<PackageReference Include="akgul.Maui.DataGrid" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

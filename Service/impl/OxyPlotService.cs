@@ -7,6 +7,8 @@ using Microsoft.Maui.Controls;
 using Maui.DataGrid;
 using System.ComponentModel;
 using IRMMAUI.ViewModels;
+using OxyPlot.Annotations;
+using OxyPlot.Legends;
 
 namespace IRMMAUI.Service.impl
 {
@@ -14,6 +16,10 @@ namespace IRMMAUI.Service.impl
     {
 
         private List<TableItem> dataModels;
+
+        private double maxYValue;//Y值最大值
+
+        private double maxXValue;//X轴最大值
 
         private ILineProcessService _lineProcessService;
         public OxyPlotService(ILineProcessService lineProcessService)
@@ -28,36 +34,42 @@ namespace IRMMAUI.Service.impl
 
             items = new List<TableItem>();
 
+
             var lineSeriesX = new LineSeries
             {
                 Color = OxyColors.Green,
                 LineJoin = OxyPlot.LineJoin.Bevel,
-                Title = "X",
+                Title = "soft",
+                StrokeThickness = 3,
                 MarkerType = MarkerType.Circle, // 设置标记类型
-                MarkerSize = 2,                 // 设置标记大小
+                MarkerSize = 8,                 // 设置标记大小
                 MarkerFill = OxyColors.Green    // 设置标记填充颜色
             };
             var lineSeriesY = new LineSeries
             {
                 Color = OxyColors.Red,
                 LineJoin = OxyPlot.LineJoin.Bevel,
-                Title = "Y",
+                StrokeThickness = 3,
+                Title = "medium",
                 MarkerType = MarkerType.Square, // 设置标记类型
-                MarkerSize = 2,                 // 设置标记大小
+                MarkerSize = 8,                 // 设置标记大小
                 MarkerFill = OxyColors.Red    // 设置标记填充颜色
             };
             var lineSeriesZ = new LineSeries
             {
                 Color = OxyColors.Blue,
                 LineJoin = OxyPlot.LineJoin.Bevel,
-                Title = "Z",
+                Title = "hard",
+                StrokeThickness = 3,
                 MarkerType = MarkerType.Triangle, // 设置标记类型
-                MarkerSize = 2,                 // 设置标记大小
+                MarkerSize = 8,                 // 设置标记大小
                 MarkerFill = OxyColors.Blue    // 设置标记填充颜色
             };
 
             if (list != null && list.Count > 0)
             {
+                maxYValue = 0.00D;
+                maxXValue = 0.00D;
                 foreach (var s in list)
                 {
                     var strs = _lineProcessService.ProcessLine(s);
@@ -89,10 +101,34 @@ namespace IRMMAUI.Service.impl
                 plotModel.Series.Add(lineSeriesX);
                 plotModel.Series.Add(lineSeriesY);
                 plotModel.Series.Add(lineSeriesZ);
+                buildLineAnnotation(plotModel);
 
                 //dataGrid.BindingContext = new DataViewModel();
                 //dataGrid.ItemsSource = dataModels;
             }
+        }
+
+        private void buildLineAnnotation(PlotModel plotModel)
+        {
+
+            var annotation = new LineAnnotation
+            {
+                Type = LineAnnotationType.Horizontal,
+                X = 5,
+                TextPosition = new DataPoint(2, 5),
+                TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Left,
+                TextVerticalAlignment = OxyPlot.VerticalAlignment.Bottom,
+
+                //MinimumX = int.Parse(maxXValue.ToString()) - 100, // X 坐标位置，可以根据需要调整
+                //MaximumX = int.Parse(maxXValue.ToString()) - 50,
+                //Y = int.Parse(maxXValue.ToString()) - 5,
+                Text = "Soft",
+                StrokeThickness = 3,
+                LineStyle = LineStyle.Solid, // 设置为 None，以消除线的显示
+                Color = OxyColors.Gray, // 设置形状的颜色
+                Layer = AnnotationLayer.AboveSeries
+            };
+            plotModel.Annotations.Add(annotation);
         }
 
         public void GetView(string title, List<string> list, out PlotModel plotModel, out TableView tableView)
@@ -103,30 +139,32 @@ namespace IRMMAUI.Service.impl
             {
                 Color = OxyColors.Green,
                 LineJoin = OxyPlot.LineJoin.Bevel,
-                Title = "X",
+                Title = "soft",
                 MarkerType = MarkerType.Circle, // 设置标记类型
-                MarkerSize = 2,                 // 设置标记大小
+                MarkerSize = 6,                 // 设置标记大小
                 MarkerFill = OxyColors.Green    // 设置标记填充颜色
             };
             var lineSeriesY = new LineSeries
             {
                 Color = OxyColors.Red,
                 LineJoin = OxyPlot.LineJoin.Bevel,
-                Title = "Y",
+                Title = "medium",
                 MarkerType = MarkerType.Square, // 设置标记类型
-                MarkerSize = 2,                 // 设置标记大小
+                MarkerSize = 6,                 // 设置标记大小
                 MarkerFill = OxyColors.Red    // 设置标记填充颜色
             };
             var lineSeriesZ = new LineSeries
             {
                 Color = OxyColors.Blue,
                 LineJoin = OxyPlot.LineJoin.Bevel,
-                Title = "Z",
+                Title = "hard",
                 MarkerType = MarkerType.Triangle, // 设置标记类型
-                MarkerSize = 2,                 // 设置标记大小
+                MarkerSize = 6,                 // 设置标记大小
                 MarkerFill = OxyColors.Blue    // 设置标记填充颜色
             };
 
+            maxYValue = 0.00D;
+            maxXValue = 0.00D;
             if (list != null && list.Count > 0)
             {
                 foreach (var s in list)
@@ -168,7 +206,7 @@ namespace IRMMAUI.Service.impl
 
         private void buildDefaultPlotView(string title, out PlotModel plotModel)
         {
-            plotModel = new PlotModel { Title = title };
+            plotModel = new PlotModel { Title = title, Legends = { }, IsLegendVisible = true };
             var xares = new LinearAxis
             {
                 Position = AxisPosition.Left,
@@ -177,11 +215,21 @@ namespace IRMMAUI.Service.impl
             var yares = new LinearAxis
             {
                 Position = AxisPosition.Bottom,
-                Title = "Temperature(℃)"
+                Title = "Temperature(℃)",
             };
             plotModel.Axes.Add(xares);
             plotModel.Axes.Add(yares);
 
+            var xlegen = new Legend
+            {
+                LegendTitleColor = OxyColor.FromUInt32(666666),
+                LegendPosition = LegendPosition.RightTop,
+                LegendSymbolLength = 80,
+                LegendItemSpacing = 40,
+                LegendFontSize = 20,
+                LegendOrientation = LegendOrientation.Horizontal,
+            };
+            plotModel.Legends.Add(xlegen);
         }
 
         private void buildDefaultDataGrid(out DataGrid dataGrid)
@@ -230,6 +278,27 @@ namespace IRMMAUI.Service.impl
                     }
                 }
             };
+        }
+
+        /**
+         * 根据不同的Y最大值，生成图表
+         * 
+         */
+        private void buildDefaultPlotViewWithYValue(string title, out PlotModel plotModel)
+        {
+            plotModel = new PlotModel { Title = title };
+            var xares = new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "IRM(A/m)"
+            };
+            var yares = new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Temperature(℃)"
+            };
+            plotModel.Axes.Add(xares);
+            plotModel.Axes.Add(yares);
         }
 
         private void buildListView(out ListView listView)
@@ -302,6 +371,7 @@ namespace IRMMAUI.Service.impl
             int result;
             if (int.TryParse(numberPart, out result))
             {
+                this.maxXValue = this.maxXValue > result ? this.maxXValue : result;
                 return result;
             }
             else
@@ -320,9 +390,10 @@ namespace IRMMAUI.Service.impl
             double.TryParse(list[4], out z);
             int.TryParse(list[5], out s6);
             var pow = Math.Pow(10, s6);
-            xValue = Math.Abs(x * pow);
-            yValue = Math.Abs(y * pow);
-            zValue = Math.Abs(z * pow);
+            xValue = Math.Round(Math.Abs(x * pow), 4);
+            yValue = Math.Round(Math.Abs(y * pow), 4);
+            zValue = Math.Round(Math.Abs(z * pow), 4);
+            this.maxYValue = maxYValue > xValue ? maxYValue : xValue;
         }
 
     }

@@ -88,7 +88,7 @@ public partial class MainPage : ContentPage
                 Directory.CreateDirectory(outPath);
             }
             // 创建 SVG 渲染器
-            var svgExporter = new SvgExporter { Width = 800, Height = 800 };
+            var svgExporter = new SvgExporter { Width = 800, Height = 600 };
 
             // 将 PlotModel 导出为 SVG 字符串
             var svgString = svgExporter.ExportToString(plotModel);
@@ -159,7 +159,7 @@ public partial class MainPage : ContentPage
 
         }
 
-        //更新按钮展示前清空按钮
+        //更新按钮展示前清空
         btnAndLabel.Children.Clear();
 
         btnAndLabel.Children.Add(new Label
@@ -175,12 +175,12 @@ public partial class MainPage : ContentPage
         dataView.Items = list;
         uiGrid.BindingContext = dataView;
         uiGrid.BackgroundColor = Colors.White;
-        uiGrid.Background = Colors.Gray;
+        uiGrid.Background = Colors.White;
         uiGrid.HeaderBackground = Colors.Gray;
         uiGrid.HeaderBordersVisible = true;
-        uiGrid.HeaderHeight = 80;
-        uiGrid.RowHeight = 60;
-        uiGrid.BorderColor = Colors.Gray;
+        uiGrid.HeaderHeight = 50;
+        uiGrid.RowHeight = 35;
+        uiGrid.BorderColor = Colors.White;
         uiGrid.ItemsSource = list;
     }
 }

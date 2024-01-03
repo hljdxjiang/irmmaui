@@ -31,20 +31,20 @@
             </HorizontalStackLayout>
             <ScrollView x:Name="tablesContent">
                 <StackLayout Orientation="Horizontal" Margin="10">
-                    <oxy:PlotView x:Name="plotView" HeightRequest="800" WidthRequest="800">
+                    <oxy:PlotView x:Name="plotView" HeightRequest="600" WidthRequest="800">
 
                     </oxy:PlotView>
                     <dg:DataGrid x:Name="uiGrid" ItemsSource="{Binding Teams}">
                         <dg:DataGrid.Columns>
                             <dg:DataGridColumn Title="SampleID" PropertyName="SampleID" Width="100" />
                             <dg:DataGridColumn Title="Temperature" PropertyName="Temperature" Width="100" />
-                            <dg:DataGridColumn Title="XValue" PropertyName="XValue" Width="100" />
-                            <dg:DataGridColumn Title="YValue" PropertyName="YValue" Width="100" />
-                            <dg:DataGridColumn Title="ZValue" PropertyName="ZValue" Width="100" />
-                            <dg:DataGridColumn Title="XOrg" PropertyName="XOrg" Width="100" />
+                            <dg:DataGridColumn Title="Soft" PropertyName="XValue" Width="100" />
+                            <dg:DataGridColumn Title="Medium" PropertyName="YValue" Width="100" />
+                            <dg:DataGridColumn Title="Hard" PropertyName="ZValue" Width="100" />
+                            <!--<dg:DataGridColumn Title="XOrg" PropertyName="XOrg" Width="100" />
                             <dg:DataGridColumn Title="YOrg" PropertyName="YOrg" Width="100" />
                             <dg:DataGridColumn Title="ZOrg" PropertyName="ZOrg" Width="100" />
-                            <dg:DataGridColumn Title="C" PropertyName="C" Width="100" />
+                            <dg:DataGridColumn Title="C" PropertyName="C" Width="100" />-->
                         </dg:DataGrid.Columns>
                     </dg:DataGrid>
                 </StackLayout>
